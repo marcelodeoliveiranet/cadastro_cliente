@@ -85,6 +85,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       },
                     ),
                   ),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                 ],
               ),
               TextFormField(
@@ -149,6 +150,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       },
                     ),
                   ),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                 ],
               ),
               TextFormField(
@@ -181,6 +183,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       },
                     ),
                   ),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                 ],
               ),
               TextFormField(
