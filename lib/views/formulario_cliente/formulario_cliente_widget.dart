@@ -1,5 +1,6 @@
 import 'package:cadastro_cliente/model/ramo_atividade.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class FormularioClienteWidget extends StatefulWidget {
@@ -23,7 +24,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     filter: {"#": RegExp(r'[0-9]')},
   );
 
-  final cnpjfMask = MaskTextInputFormatter(
+  final cnpjMask = MaskTextInputFormatter(
     mask: "##.###.###/####-##",
     filter: {"#": RegExp(r'[0-9]')},
   );
@@ -210,6 +211,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     );
   }
 
+  List<TextInputFormatter> get inputFormatters {
+    return _tipoPessoa == 'F' ? [cpfMask] : [cnpjMask];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -313,9 +318,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
               TextFormField(
                 controller: cnpjCpfController,
                 keyboardType: TextInputType.text,
+                inputFormatters: inputFormatters,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  label: Text("CNPJ"),
+                  labelText: _tipoPessoa == "F" ? "CPF" : "CNPJ",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -411,6 +417,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   ),
                 ],
               ),
+
               Row(
                 children: [
                   Expanded(
@@ -436,6 +443,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                 ],
               ),
+
               TextFormField(
                 controller: logradouroCotroller,
                 keyboardType: TextInputType.text,
@@ -450,6 +458,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   return null;
                 },
               ),
+
               TextFormField(
                 controller: numeroController,
                 keyboardType: TextInputType.text,
@@ -464,6 +473,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   return null;
                 },
               ),
+
               TextFormField(
                 controller: complementoController,
                 keyboardType: TextInputType.text,
@@ -472,6 +482,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   label: Text("Complemento"),
                 ),
               ),
+
               TextFormField(
                 controller: bairroController,
                 keyboardType: TextInputType.text,
