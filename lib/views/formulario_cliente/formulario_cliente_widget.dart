@@ -215,6 +215,12 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     return _tipoPessoa == 'F' ? [cpfMask] : [cnpjMask];
   }
 
+  void limparTextoMascara() {
+    cnpjCpfController.clear();
+    cpfMask.clear();
+    cnpjMask.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,6 +245,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       onChanged: (value) {
                         setState(() {
                           _tipoPessoa = value;
+                          limparTextoMascara();
                         });
                       },
                     ),
@@ -251,6 +258,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       onChanged: (value) {
                         setState(() {
                           _tipoPessoa = value;
+                          limparTextoMascara();
                         });
                       },
                     ),
@@ -412,6 +420,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     ),
                   ),
                   IconButton(
+                    tooltip: "Busca o endereço baseado em um cep",
                     onPressed: () {},
                     icon: const Icon(Icons.find_in_page),
                   ),
