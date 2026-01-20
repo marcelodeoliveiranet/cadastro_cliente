@@ -76,9 +76,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   TextFormField(
                     autofocus: true,
                     controller: descricaoController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Descrição",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -116,6 +118,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                             final valor = descricaoController.text;
                             debugPrint("Gravado $valor");
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
                           child: const Text("Gravar"),
                         ),
                       ),
@@ -159,9 +165,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   TextFormField(
                     autofocus: true,
                     controller: descricaoController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Nome do país",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -197,7 +205,102 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                             final valor = descricaoController.text;
                             debugPrint("Gravado $valor");
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
                           child: const Text("Gravar"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _incluirTipoLogradouro() {
+    final descricaoController = TextEditingController();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Form(
+              key: formModalKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Cadastrar um novo tipo de logradouro",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  TextFormField(
+                    autofocus: true,
+                    controller: descricaoController,
+                    decoration: InputDecoration(
+                      labelText: "Nome do tipo do logradouro",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Informe o nome do tipo de logradouro";
+                      }
+
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 44),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancelar"),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final isValid =
+                                formModalKey.currentState?.validate() ?? false;
+
+                            if (!isValid) {
+                              return;
+                            }
+
+                            final valor = descricaoController.text;
+                            debugPrint("Gravado $valor");
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            "Gravar",
+                            style: TextStyle(fontSize: 14),
+                          ),
                         ),
                       ),
                     ],
@@ -269,8 +372,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: razaoSocialController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: const Text("Razão Social"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText:
+                      _tipoPessoa == "F" ? "Nome completo" : "Razão Social",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -283,8 +389,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: nomeFantasiaController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: const Text("Nome Fantasia"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: _tipoPessoa == "F" ? "Apelido" : "Nome Fantasia",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -297,9 +405,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<RamoAtividade>(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Selecione um ramo atividade",
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                       ),
                       isExpanded: true,
                       value: null,
@@ -328,7 +438,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 keyboardType: TextInputType.text,
                 inputFormatters: inputFormatters,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
                   labelText: _tipoPessoa == "F" ? "CPF" : "CNPJ",
                 ),
                 validator: (value) {
@@ -339,44 +451,54 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 },
               ),
               TextFormField(
-                controller: inscricaoEstadualController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Inscricao Municipal"),
-                ),
-              ),
-              TextFormField(
                 controller: inscricaoMunicipalController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Inscricao Estadual"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: _tipoPessoa == "F" ? "RG" : "Inscricao Estadual",
+                ),
+              ),
+              TextFormField(
+                controller: inscricaoEstadualController,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Inscricao Municipal",
                 ),
               ),
               TextFormField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Email"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Email",
                 ),
               ),
               TextFormField(
                 controller: homePageController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Home Page"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Home Page",
                 ),
               ),
               Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<RamoAtividade>(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Selecione um país",
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                       ),
                       isExpanded: true,
                       value: null,
@@ -408,8 +530,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       inputFormatters: [cepMask],
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        label: Text("Cep"),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        labelText: "Cep",
                       ),
                       validator: (value) {
                         if (value == "" || value == null) {
@@ -431,9 +555,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<RamoAtividade>(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Selecione o tipo do logradouro",
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                       ),
                       isExpanded: true,
                       value: null,
@@ -449,7 +575,12 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       },
                     ),
                   ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+                  IconButton(
+                    onPressed: () {
+                      _incluirTipoLogradouro();
+                    },
+                    icon: const Icon(Icons.add),
+                  ),
                 ],
               ),
 
@@ -457,8 +588,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: logradouroCotroller,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Logradouro"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Logradouro",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -472,8 +605,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: numeroController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Número"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Número",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -487,8 +622,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: complementoController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Complemento"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Complemento",
                 ),
               ),
 
@@ -496,8 +633,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: bairroController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Bairro"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Bairro",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -510,8 +649,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: municipioController,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Municipio"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Municipio",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -524,22 +665,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 controller: municipioController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Municipio"),
-                ),
-                validator: (value) {
-                  if (value == "" || value == null) {
-                    return "Informe o município";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: municipioController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  label: Text("Código do IBGE"),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  labelText: "Código do IBGE",
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
@@ -552,9 +681,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<RamoAtividade>(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Selecione um estado",
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                       ),
                       isExpanded: true,
                       value: null,
