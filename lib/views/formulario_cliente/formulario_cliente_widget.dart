@@ -380,7 +380,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return "Informe a razão social";
+                    return _tipoPessoa == "F"
+                        ? "Informe o nome completo"
+                        : "Informe a razão social";
                   }
                   return null;
                 },
@@ -396,7 +398,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return "Informe o nome fantasia";
+                    return _tipoPessoa == "F"
+                        ? "Informe o apelido"
+                        : "Informe o nome fantasia";
                   }
                   return null;
                 },
@@ -445,7 +449,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 ),
                 validator: (value) {
                   if (value == "" || value == null) {
-                    return "Informe o CNPJ";
+                    return _tipoPessoa == "F"
+                        ? "Informe o CPF"
+                        : "Informe o CNPJ";
                   }
                   return null;
                 },
@@ -706,18 +712,23 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final validation = formKey.currentState?.validate();
+                    child: SafeArea(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final validation = formKey.currentState?.validate();
 
-                        if (validation == true) {}
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(200, 50),
+                          if (validation == true) {}
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          minimumSize: Size(200, 50),
+                        ),
+                        child: const Text(
+                          "Gravar",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
-                      child: const Text("Gravar"),
                     ),
                   ),
                 ],
