@@ -539,6 +539,12 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       isExpanded: true,
                       value: null,
                       items: [],
+                      validator: (value) {
+                        if (value == null) {
+                          return "Selecione um estado";
+                        }
+                        return null;
+                      },
                       onChanged: (value) {
                         setState(() {});
                       },
