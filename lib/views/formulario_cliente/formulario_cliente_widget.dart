@@ -34,6 +34,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     filter: {"#": RegExp(r'[0-9]')},
   );
 
+  final telefone1Mask = MaskTextInputFormatter(
+    mask: "(##) # ####-####",
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+
   final formKey = GlobalKey<FormState>();
   final formModalKey = GlobalKey<FormState>();
 
@@ -466,44 +471,34 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   ],
                 ),
                 Divider(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: cnpjCpfController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: inputFormatters,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          labelText: _tipoPessoa == "F" ? "CPF" : "CNPJ",
-                        ),
-                        validator: (value) {
-                          if (value == "" || value == null) {
-                            return _tipoPessoa == "F"
-                                ? "Informe o CPF"
-                                : "Informe o CNPJ";
-                          }
-                          return null;
-                        },
-                      ),
+                TextFormField(
+                  controller: cnpjCpfController,
+                  keyboardType: TextInputType.text,
+                  inputFormatters: inputFormatters,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
                     ),
-                    SizedBox(width: 15),
-                    Expanded(
-                      child: TextFormField(
-                        controller: inscricaoMunicipalController,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          labelText:
-                              _tipoPessoa == "F" ? "RG" : "Inscricao Estadual",
-                        ),
-                      ),
+                    labelText: _tipoPessoa == "F" ? "CPF" : "CNPJ",
+                  ),
+                  validator: (value) {
+                    if (value == "" || value == null) {
+                      return _tipoPessoa == "F"
+                          ? "Informe o CPF"
+                          : "Informe o CNPJ";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: inscricaoMunicipalController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
                     ),
-                  ],
+                    labelText: _tipoPessoa == "F" ? "RG" : "Inscricao Estadual",
+                  ),
                 ),
 
                 TextFormField(
@@ -543,7 +538,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       child: TextFormField(
                         controller: cepController,
                         inputFormatters: [cepMask],
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -763,6 +758,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                           child: TextFormField(
                             controller: telefone1Controller,
                             keyboardType: TextInputType.number,
+                            inputFormatters: [telefone1Mask],
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
