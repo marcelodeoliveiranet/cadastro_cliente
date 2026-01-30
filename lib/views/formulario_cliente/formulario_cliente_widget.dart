@@ -763,6 +763,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                             keyboardType: TextInputType.number,
                             inputFormatters: [telefone1Mask],
                             decoration: InputDecoration(
+                              hintText: "(99) 99999-99",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
