@@ -360,7 +360,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1B1F),
       appBar: AppBar(
-        title: Text("Cadastro de Cliente"),
+        title: Text(
+          "Cadastro de Cliente",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: SafeArea(
