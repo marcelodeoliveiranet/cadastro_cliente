@@ -57,6 +57,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   final bairroController = TextEditingController();
   final municipioController = TextEditingController();
   final codigoIbgeController = TextEditingController();
+  final estadoController = TextEditingController();
   final telefone1Controller = TextEditingController();
   final complementoTelefone1Controller = TextEditingController();
   final telefone2Controller = TextEditingController();
@@ -77,6 +78,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     bairroController.clear();
     municipioController.clear();
     codigoIbgeController.clear();
+    estadoController.clear();
     telefone1Controller.clear();
     complementoTelefone1Controller.clear();
     telefone2Controller.clear();
@@ -177,96 +179,6 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                             foregroundColor: Colors.white,
                           ),
                           child: const Text("Gravar"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _incluirTipoLogradouro() {
-    final descricaoController = TextEditingController();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Form(
-              key: formModalKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Cadastrar um novo tipo de logradouro",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  TextFormField(
-                    autofocus: true,
-                    controller: descricaoController,
-                    decoration: InputDecoration(
-                      labelText: "Nome do tipo do logradouro",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Informe o nome do tipo de logradouro";
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 44),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancelar"),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final isValid =
-                                formModalKey.currentState?.validate() ?? false;
-
-                            if (!isValid) {
-                              return;
-                            }
-
-                            final valor = descricaoController.text;
-                            debugPrint("Gravado $valor");
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text(
-                            "Gravar",
-                            style: TextStyle(fontSize: 14),
-                          ),
                         ),
                       ),
                     ],
@@ -606,39 +518,8 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       onPressed: () {},
                       icon: const Icon(Icons.find_in_page),
                     ),
-                    Expanded(
-                      child: DropdownButtonFormField<RamoAtividade>(
-                        decoration: InputDecoration(
-                          labelText: "Tipo do logradouro",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        isExpanded: true,
-                        value: null,
-                        items: [],
-                        // validator: (value) {
-                        //   if (value == null) {
-                        //     return "Selecione um tipo de logradouro";
-                        //   }
-                        //   return null;
-                        // },
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _incluirTipoLogradouro();
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
                   ],
                 ),
-                Row(children: [
-                ],
-              ),
 
                 TextFormField(
                   controller: logradouroCotroller,
@@ -754,31 +635,22 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<RamoAtividade>(
-                        decoration: InputDecoration(
-                          labelText: "Selecione um estado",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        isExpanded: true,
-                        value: null,
-                        items: [],
-                        // validator: (value) {
-                        //   if (value == null) {
-                        //     return "Selecione um estado";
-                        //   }
-                        //   return null;
-                        // },
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                      ),
+                TextFormField(
+                  controller: estadoController,
+                  keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
                     ),
-                  ],
+                    labelText: "Estado",
+                  ),
+                  validator: (value) {
+                    if (value == "" || value == null) {
+                      return "Informe o estado";
+                    }
+                    return null;
+                  },
                 ),
                 Divider(),
                 Column(
@@ -878,6 +750,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     bairroController.dispose();
     municipioController.dispose();
     codigoIbgeController.dispose();
+    estadoController.dispose();
     telefone1Controller.dispose();
     complementoTelefone1Controller.dispose();
     telefone2Controller.dispose();
