@@ -68,6 +68,76 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   final telefone2Controller = TextEditingController();
   final complementoTelefone2Controller = TextEditingController();
 
+  bool isCpfValido(String cpf) {
+    cpf = cpf.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Deve ter 11 dígitos
+    if (cpf.length != 11) return false;
+
+    // Elimina CPFs com todos os dígitos iguais
+    if (RegExp(r'^(\d)\1{10}$').hasMatch(cpf)) return false;
+
+    // Validação do primeiro dígito
+    int soma = 0;
+    for (int i = 0; i < 9; i++) {
+      soma += int.parse(cpf[i]) * (10 - i);
+    }
+    int digito1 = (soma * 10) % 11;
+    if (digito1 == 10) digito1 = 0;
+    if (digito1 != int.parse(cpf[9])) return false;
+
+    // Validação do segundo dígito
+    soma = 0;
+    for (int i = 0; i < 10; i++) {
+      soma += int.parse(cpf[i]) * (11 - i);
+    }
+    int digito2 = (soma * 10) % 11;
+    if (digito2 == 10) digito2 = 0;
+    if (digito2 != int.parse(cpf[10])) return false;
+
+    return true;
+  }
+
+  bool isCnpjValido(String cnpj) {
+    cnpj = cnpj.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Deve ter 14 dígitos
+    if (cnpj.length != 14) return false;
+
+    // Elimina CNPJs com todos os dígitos iguais
+    if (RegExp(r'^(\d)\1{13}$').hasMatch(cnpj)) return false;
+
+    List<int> numeros = cnpj.split('').map((e) => int.parse(e)).toList();
+
+    // Validação do primeiro dígito
+    List<int> pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    int soma = 0;
+
+    for (int i = 0; i < pesos1.length; i++) {
+      soma += numeros[i] * pesos1[i];
+    }
+
+    int resto = soma % 11;
+    int digito1 = resto < 2 ? 0 : 11 - resto;
+
+    if (digito1 != numeros[12]) return false;
+
+    // Validação do segundo dígito
+    List<int> pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    soma = 0;
+
+    for (int i = 0; i < pesos2.length; i++) {
+      soma += numeros[i] * pesos2[i];
+    }
+
+    resto = soma % 11;
+    int digito2 = resto < 2 ? 0 : 11 - resto;
+
+    if (digito2 != numeros[13]) return false;
+
+    return true;
+  }
+
   void _buscarCep(BuildContext context) async {
     final cep = cepController.text;
     final cepData = await clienteController.buscarCep(cep);
@@ -473,6 +543,15 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                           ? "Informe o CPF"
                           : "Informe o CNPJ";
                     }
+
+                    if (_tipoPessoa == "F" && !isCpfValido(value)) {
+                      return "CPF inválido";
+                    }
+
+                    if (_tipoPessoa == "J" && !isCnpjValido(value)) {
+                      return "CNPJ inválido";
+                    }
+
                     return null;
                   },
                 ),
