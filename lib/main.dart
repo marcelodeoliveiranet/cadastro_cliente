@@ -1,7 +1,9 @@
+import 'package:cadastro_cliente/dependecies/injetor.dart';
 import 'package:cadastro_cliente/views/cliente/formulario_cadastro_cliente.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  setupInjector();
   runApp(const MyApp());
 }
 

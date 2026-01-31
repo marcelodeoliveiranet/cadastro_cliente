@@ -1,4 +1,7 @@
-import 'package:cadastro_cliente/models/ramo_atividade.dart';
+import 'package:cadastro_cliente/controllers/cliente_controller.dart';
+import 'package:cadastro_cliente/dependecies/injetor.dart';
+import 'package:cadastro_cliente/models/ramo_atividade_model.dart';
+import 'package:cadastro_cliente/models/tipo_telefone_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -12,8 +15,10 @@ class FormularioClienteWidget extends StatefulWidget {
 }
 
 class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
+  ClienteController clienteController = getIt<ClienteController>();
   String? _tipoPessoa = "F";
   final _razaoSocialFocus = FocusNode();
+  final _numeroLogradouroFocus = FocusNode();
 
   final cepMask = MaskTextInputFormatter(
     mask: "#####-###",
@@ -62,6 +67,39 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   final complementoTelefone1Controller = TextEditingController();
   final telefone2Controller = TextEditingController();
   final complementoTelefone2Controller = TextEditingController();
+
+  void _buscarCep(BuildContext context) async {
+    final cep = cepController.text;
+    final cepData = await clienteController.buscarCep(cep);
+
+    if (cepData != null) {
+      logradouroCotroller.text = cepData.logradouro;
+      bairroController.text = cepData.bairro;
+      municipioController.text = cepData.localidade;
+      estadoController.text = cepData.uf;
+      codigoIbgeController.text = cepData.ibge;
+
+      FocusScope.of(context).requestFocus(_numeroLogradouroFocus);
+    } else {
+      logradouroCotroller.clear();
+      bairroController.clear();
+      municipioController.clear();
+      estadoController.clear();
+      codigoIbgeController.clear();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "CEP não encontrado",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   void _limparCamposFormulario() {
     razaoSocialController.clear();
@@ -292,6 +330,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1B1F),
@@ -383,7 +426,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 Row(
                   children: [
                     Expanded(
-                      child: DropdownButtonFormField<RamoAtividade>(
+                      child: DropdownButtonFormField<RamoAtividadeModel>(
                         decoration: InputDecoration(
                           labelText: "Selecione um ramo atividade",
                           border: OutlineInputBorder(
@@ -515,7 +558,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     ),
                     IconButton(
                       tooltip: "Busca o endereço baseado em um cep",
-                      onPressed: () {},
+                      onPressed: () => _buscarCep(context),
                       icon: const Icon(Icons.find_in_page),
                     ),
                   ],
@@ -543,6 +586,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     Expanded(
                       child: TextFormField(
                         controller: numeroController,
+                        focusNode: _numeroLogradouroFocus,
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
@@ -591,28 +635,25 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     return null;
                   },
                 ),
+                TextFormField(
+                  controller: municipioController,
+                  keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    labelText: "Municipio",
+                  ),
+                  validator: (value) {
+                    if (value == "" || value == null) {
+                      return "Informe o município";
+                    }
+                    return null;
+                  },
+                ),
                 Row(
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: municipioController,
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          labelText: "Municipio",
-                        ),
-                        validator: (value) {
-                          if (value == "" || value == null) {
-                            return "Informe o município";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 10),
                     Expanded(
                       child: TextFormField(
                         controller: codigoIbgeController,
@@ -633,24 +674,27 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         },
                       ),
                     ),
-                  ],
-                ),
-                TextFormField(
-                  controller: estadoController,
-                  keyboardType: TextInputType.text,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(18),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextFormField(
+                        controller: estadoController,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          labelText: "Estado",
+                        ),
+                        validator: (value) {
+                          if (value == "" || value == null) {
+                            return "Informe o estado";
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                    labelText: "Estado",
-                  ),
-                  validator: (value) {
-                    if (value == "" || value == null) {
-                      return "Informe o estado";
-                    }
-                    return null;
-                  },
+                  ],
                 ),
                 Divider(),
                 Column(
@@ -659,7 +703,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     Row(
                       children: [
                         Expanded(
-                          child: DropdownButtonFormField<RamoAtividade>(
+                          child: DropdownButtonFormField<TipoTelefoneModel>(
                             decoration: InputDecoration(
                               labelText: "Selecione um tipo telefone",
                               border: OutlineInputBorder(
