@@ -432,6 +432,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   controller: razaoSocialController,
                   focusNode: _razaoSocialFocus,
                   keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),

@@ -1,4 +1,4 @@
-import 'package:cadastro_cliente/views/formulario_cliente/formulario_cliente_widget.dart';
+import 'package:cadastro_cliente/views/cliente/formulario_cadastro_cliente.dart';
 import 'package:flutter/material.dart';
 
 void main() {
