@@ -321,7 +321,6 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     );
 
     if (salvou == true) {
-      // Atualizar a lista de ramos de atividade
       setState(() {
         clienteController.obterRamosAtividade();
       });
