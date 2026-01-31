@@ -1,9 +1,48 @@
+import 'package:cadastro_cliente/core/database/app_database.dart';
 import 'package:cadastro_cliente/dependecies/injetor.dart';
 import 'package:cadastro_cliente/views/cliente/formulario_cadastro_cliente.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
-void main() {
+Future<void> exibirEstruturaTabela(Database db, String nomeTabela) async {
+  var columns = await db.rawQuery("PRAGMA table_info($nomeTabela)");
+
+  print("");
+  print("Colunas da tabela: $nomeTabela");
+  print("===============================");
+
+  String pk = "False";
+
+  for (var column in columns) {
+    if (column["pk"] == 1) {
+      pk = "True ";
+    } else {
+      pk = "False";
+    }
+
+    print("Campo PK: $pk | Coluna: ${column['name']} | Tipo:${column['type']}");
+  }
+
+  final fks = await db.rawQuery("PRAGMA foreign_key_list($nomeTabela)");
+
+  if (fks.isNotEmpty) {
+    print("");
+    print("Foreign Keys");
+    print("============");
+
+    for (var row in fks) {
+      print(row);
+    }
+  }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupInjector();
+  final db = await AppDatabase.database;
+
+  await exibirEstruturaTabela(db, "RAMOATIVIDADE");
+
   runApp(const MyApp());
 }
 

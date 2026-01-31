@@ -1,5 +1,6 @@
 import 'package:cadastro_cliente/controllers/cliente_controller.dart';
 import 'package:cadastro_cliente/dependecies/injetor.dart';
+import 'package:cadastro_cliente/dto/request/cadastrar_ramo_atividade_request.dart';
 import 'package:cadastro_cliente/models/ramo_atividade_model.dart';
 import 'package:cadastro_cliente/models/tipo_telefone_model.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class FormularioClienteWidget extends StatefulWidget {
 class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   ClienteController clienteController = getIt<ClienteController>();
   String? _tipoPessoa = "F";
+  RamoAtividadeModel? _ramoAtividadeSelecionado;
+
   final _razaoSocialFocus = FocusNode();
   final _numeroLogradouroFocus = FocusNode();
 
@@ -46,6 +49,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   );
 
   final formKey = GlobalKey<FormState>();
+  final dropDownKey = GlobalKey<FormFieldState>();
   final formModalKey = GlobalKey<FormState>();
 
   final razaoSocialController = TextEditingController();
@@ -207,14 +211,19 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
         ),
       );
 
+      setState(() {
+        _limparCamposFormulario();
+      });
+
+      formKey.currentState?.reset();
       FocusScope.of(context).requestFocus(_razaoSocialFocus);
     }
   }
 
-  void _incluirNovoRamoAtividade(BuildContext context) {
+  Future<void> _abrirDialogNovoRamoAtividade(BuildContext context) async {
     final descricaoController = TextEditingController();
 
-    showDialog(
+    final salvou = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
@@ -261,7 +270,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
-                            Navigator.pop(context);
+                            Navigator.pop(context, false);
                           },
                           child: const Text("Cancelar"),
                         ),
@@ -271,7 +280,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
 
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final isVaid =
                                 formModalKey.currentState?.validate() ?? false;
 
@@ -279,8 +288,20 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                               return;
                             }
 
+                            CadastrarRamoAtividadeRequest
+                            cadastrarRamoAtividadeRequest =
+                                CadastrarRamoAtividadeRequest(
+                                  codigo: null,
+                                  descricao: descricaoController.text,
+                                );
+
+                            await clienteController.inserirRamoAtividade(
+                              cadastrarRamoAtividadeRequest,
+                            );
+
                             final valor = descricaoController.text;
                             debugPrint("Gravado $valor");
+                            Navigator.pop(context, true);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
@@ -298,6 +319,13 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
         );
       },
     );
+
+    if (salvou == true) {
+      // Atualizar a lista de ramos de atividade
+      setState(() {
+        clienteController.obterRamosAtividade();
+      });
+    }
   }
 
   void _incluirTipoTelefone() {
@@ -402,6 +430,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   @override
   void initState() {
     super.initState();
+    clienteController.obterRamosAtividade();
   }
 
   @override
@@ -498,31 +527,45 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 Row(
                   children: [
                     Expanded(
-                      child: DropdownButtonFormField<RamoAtividadeModel>(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.category),
-                          labelText: "Selecione um ramo atividade",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        isExpanded: true,
-                        value: null,
-                        items: [],
-                        // validator: (value) {
-                        //   if (value == null) {
-                        //     return "Selecione um ramo de atividade";
-                        //   }
-                        //   return null;
-                        // },
-                        onChanged: (value) {
-                          setState(() {});
+                      child: ListenableBuilder(
+                        listenable: clienteController.ramoAtividadeState,
+                        builder: (context, child) {
+                          return DropdownButtonFormField<RamoAtividadeModel>(
+                            key: dropDownKey,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.category),
+                              labelText: "Selecione um ramo atividade",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            isExpanded: true,
+                            value: _ramoAtividadeSelecionado,
+                            items:
+                                clienteController.ramosAtividade.map((
+                                  ramoAtividade,
+                                ) {
+                                  return DropdownMenuItem<RamoAtividadeModel>(
+                                    value: ramoAtividade,
+                                    child: Text(ramoAtividade.descricao),
+                                  );
+                                }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return "Selecione um ramo de atividade";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                          );
                         },
                       ),
                     ),
                     IconButton(
                       onPressed: () {
-                        _incluirNovoRamoAtividade(context);
+                        _abrirDialogNovoRamoAtividade(context);
                       },
                       icon: const Icon(Icons.add),
                     ),

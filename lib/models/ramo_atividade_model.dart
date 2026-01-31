@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 class RamoAtividadeModel {
-  final Short codigo;
+  final int codigo;
   final String descricao;
 
   RamoAtividadeModel({required this.codigo, required this.descricao});
@@ -10,12 +10,10 @@ class RamoAtividadeModel {
     return <String, dynamic>{'codigo': codigo, 'descricao': descricao};
   }
 
-  factory RamoAtividadeModel.fromJson(Map<String, dynamic> map) {
+  factory RamoAtividadeModel.fromMap(Map<String, dynamic> map) {
     return RamoAtividadeModel(
-      codigo: map['codigo'] as Short,
+      codigo: map['codigo'] as int,
       descricao: map['descricao'] as String,
     );
   }
-
-  List<Object> get props => [codigo, descricao];
 }
