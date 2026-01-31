@@ -1,4 +1,4 @@
-import 'package:cadastro_cliente/model/ramo_atividade.dart';
+import 'package:cadastro_cliente/models/ramo_atividade.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -81,13 +81,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     complementoTelefone1Controller.clear();
     telefone2Controller.clear();
     complementoTelefone2Controller.clear();
-
-    FocusScope.of(context).unfocus();
   }
 
   void _salvar(BuildContext context) async {
-    //_limparCamposFormulario();
-
     if (formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
