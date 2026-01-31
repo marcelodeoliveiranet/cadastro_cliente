@@ -13,6 +13,7 @@ class FormularioClienteWidget extends StatefulWidget {
 
 class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   String? _tipoPessoa = "F";
+  final _razaoSocialFocus = FocusNode();
 
   final cepMask = MaskTextInputFormatter(
     mask: "#####-###",
@@ -61,7 +62,32 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   final telefone2Controller = TextEditingController();
   final complementoTelefone2Controller = TextEditingController();
 
-  void _salvar() {
+  void _limparCamposFormulario() {
+    razaoSocialController.clear();
+    nomeFantasiaController.clear();
+    cnpjCpfController.clear();
+    inscricaoEstadualController.clear();
+    inscricaoMunicipalController.clear();
+    emailController.clear();
+    homePageController.clear();
+    cepController.clear();
+    logradouroCotroller.clear();
+    numeroController.clear();
+    complementoController.clear();
+    bairroController.clear();
+    municipioController.clear();
+    codigoIbgeController.clear();
+    telefone1Controller.clear();
+    complementoTelefone1Controller.clear();
+    telefone2Controller.clear();
+    complementoTelefone2Controller.clear();
+
+    FocusScope.of(context).unfocus();
+  }
+
+  void _salvar(BuildContext context) async {
+    //_limparCamposFormulario();
+
     if (formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -71,9 +97,11 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
           ),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 2),
         ),
       );
+
+      FocusScope.of(context).requestFocus(_razaoSocialFocus);
     }
   }
 
@@ -406,6 +434,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 ),
                 TextFormField(
                   controller: razaoSocialController,
+                  focusNode: _razaoSocialFocus,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -426,6 +455,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 TextFormField(
                   controller: nomeFantasiaController,
                   keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -476,8 +506,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 Divider(),
                 TextFormField(
                   controller: cnpjCpfController,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   inputFormatters: inputFormatters,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -517,12 +548,28 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
                     labelText: "Email",
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Informe o email";
+                    }
+
+                    final emailRegex = RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    );
+
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'E-mail inválido';
+                    }
+
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: homePageController,
@@ -542,6 +589,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         controller: cepController,
                         inputFormatters: [cepMask],
                         keyboardType: TextInputType.number,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -598,6 +646,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 TextFormField(
                   controller: logradouroCotroller,
                   keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -617,6 +666,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       child: TextFormField(
                         controller: numeroController,
                         keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -649,6 +699,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 TextFormField(
                   controller: bairroController,
                   keyboardType: TextInputType.text,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
@@ -668,6 +719,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       child: TextFormField(
                         controller: municipioController,
                         keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -688,6 +740,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         controller: codigoIbgeController,
                         keyboardType: TextInputType.number,
                         inputFormatters: [codigoMunicipioIbgeMask],
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -796,7 +849,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
           padding: const EdgeInsets.all(10),
           child: FilledButton.icon(
             icon: const Icon(Icons.save),
-            onPressed: _salvar,
+            onPressed: () => _salvar(context),
             style: FilledButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
