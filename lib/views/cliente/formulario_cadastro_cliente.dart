@@ -459,6 +459,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -479,6 +480,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -498,6 +500,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     Expanded(
                       child: DropdownButtonFormField<RamoAtividadeModel>(
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.category),
                           labelText: "Selecione um ramo atividade",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -532,6 +535,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   inputFormatters: inputFormatters,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      _tipoPessoa == "F" ? Icons.article : Icons.business,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -559,6 +565,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   controller: inscricaoMunicipalController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      _tipoPessoa == "F" ? Icons.article : Icons.business,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -570,6 +579,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   controller: inscricaoEstadualController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.business),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -581,6 +591,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.emailAddress,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -606,6 +617,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   controller: homePageController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.web),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -622,6 +634,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         keyboardType: TextInputType.number,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -648,6 +661,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.location_on),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -669,6 +683,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -688,6 +703,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         controller: complementoController,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -702,6 +718,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.location_on),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -719,6 +736,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.location_on),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -740,6 +758,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         inputFormatters: [codigoMunicipioIbgeMask],
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -760,6 +779,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                         keyboardType: TextInputType.text,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.location_on),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -776,59 +796,54 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                   ],
                 ),
                 Divider(),
-                Column(
-                  spacing: 18,
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DropdownButtonFormField<TipoTelefoneModel>(
-                            decoration: InputDecoration(
-                              labelText: "Selecione um tipo telefone",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                            ),
-                            isExpanded: true,
-                            value: null,
-                            items: [],
-                            onChanged: (value) {
-                              setState(() {});
-                            },
+                    Expanded(
+                      child: DropdownButtonFormField<TipoTelefoneModel>(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.category),
+                          labelText: "Selecione um tipo telefone",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
                           ),
                         ),
-                        IconButton(
-                          tooltip: "Busca o endereço baseado em um cep",
-                          onPressed: _incluirTipoTelefone,
-                          icon: const Icon(Icons.add),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            controller: telefone1Controller,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [telefone1Mask],
-                            decoration: InputDecoration(
-                              hintText: "(99) 9 9999-99",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                              ),
-                              labelText: "Telefone",
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextFormField(
-                      controller: complementoTelefone1Controller,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        labelText: "Complemento",
+                        isExpanded: true,
+                        value: null,
+                        items: [],
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
                     ),
+                    IconButton(
+                      onPressed: _incluirTipoTelefone,
+                      icon: const Icon(Icons.add),
+                    ),
                   ],
+                ),
+                TextFormField(
+                  controller: telefone1Controller,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [telefone1Mask],
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.phone),
+                    hintText: "(99) 9 9999-99",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    labelText: "Telefone",
+                  ),
+                ),
+                TextFormField(
+                  controller: complementoTelefone1Controller,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.phone),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    labelText: "Complemento",
+                  ),
                 ),
               ],
             ),
