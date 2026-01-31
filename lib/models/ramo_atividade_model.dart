@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class RamoAtividadeModel {
   final int codigo;
   final String descricao;

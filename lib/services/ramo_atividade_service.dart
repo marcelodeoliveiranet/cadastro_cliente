@@ -8,7 +8,7 @@ class RamoAtividadeService {
   Future<List<RamoAtividadeModel>> obtenhaRamosAtividade() async {
     final Database db = await AppDatabase.database;
 
-    final ramosAtividade = await db.query(tableRamoAtividadeTableName);
+    final ramosAtividade = await db.query(ramoAtividadeTableName);
     return ramosAtividade.map((e) => RamoAtividadeModel.fromMap(e)).toList();
   }
 
@@ -18,7 +18,7 @@ class RamoAtividadeService {
     final Database db = await AppDatabase.database;
 
     await db.insert(
-      tableRamoAtividadeTableName,
+      ramoAtividadeTableName,
       ramoAtividade.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

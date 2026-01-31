@@ -42,6 +42,7 @@ void main() async {
   final db = await AppDatabase.database;
 
   await exibirEstruturaTabela(db, "RAMOATIVIDADE");
+  await exibirEstruturaTabela(db, "TIPOTELEFONE");
 
   runApp(const MyApp());
 }

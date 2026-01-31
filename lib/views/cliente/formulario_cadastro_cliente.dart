@@ -1,6 +1,7 @@
 import 'package:cadastro_cliente/controllers/cliente_controller.dart';
 import 'package:cadastro_cliente/dependecies/injetor.dart';
 import 'package:cadastro_cliente/dto/request/cadastrar_ramo_atividade_request.dart';
+import 'package:cadastro_cliente/dto/request/cadastrar_tipo_telefone_request.dart';
 import 'package:cadastro_cliente/models/ramo_atividade_model.dart';
 import 'package:cadastro_cliente/models/tipo_telefone_model.dart';
 import 'package:flutter/material.dart';
@@ -327,10 +328,10 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
     }
   }
 
-  void _incluirTipoTelefone() {
+  void _abrirDialogNovoTipoTelefone() async {
     final descricaoController = TextEditingController();
 
-    showDialog(
+    final salvou = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
@@ -387,16 +388,27 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
 
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final isVaid =
                                 formModalKey.currentState?.validate() ?? false;
 
                             if (!isVaid) {
                               return;
                             }
+                            CadastrarTipoTelefoneRequest
+                            cadastrarTipoTelefoneRequest =
+                                CadastrarTipoTelefoneRequest(
+                                  codigo: null,
+                                  descricao: descricaoController.text,
+                                );
+
+                            await clienteController.inserirTipoTelefone(
+                              cadastrarTipoTelefoneRequest,
+                            );
 
                             final valor = descricaoController.text;
                             debugPrint("Gravado $valor");
+                            Navigator.pop(context, true);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
@@ -414,6 +426,12 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
         );
       },
     );
+
+    if (salvou == true) {
+      setState(() {
+        clienteController.obterTiposTelefone();
+      });
+    }
   }
 
   List<TextInputFormatter> get inputFormatters {
@@ -430,6 +448,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   void initState() {
     super.initState();
     clienteController.obterRamosAtividade();
+    clienteController.obterTiposTelefone();
   }
 
   @override
@@ -841,24 +860,36 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                 Row(
                   children: [
                     Expanded(
-                      child: DropdownButtonFormField<TipoTelefoneModel>(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.category),
-                          labelText: "Selecione um tipo telefone",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
-                        isExpanded: true,
-                        value: null,
-                        items: [],
-                        onChanged: (value) {
-                          setState(() {});
+                      child: ListenableBuilder(
+                        listenable: clienteController.tipoTelefoneState,
+                        builder: (context, child) {
+                          return DropdownButtonFormField<TipoTelefoneModel>(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.phone),
+                              labelText: "Selecione um tipo de telefone",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            isExpanded: true,
+                            items:
+                                clienteController.tiposTelefone.map((
+                                  tipoTelefone,
+                                ) {
+                                  return DropdownMenuItem<TipoTelefoneModel>(
+                                    value: tipoTelefone,
+                                    child: Text(tipoTelefone.descricao),
+                                  );
+                                }).toList(),
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                          );
                         },
                       ),
                     ),
                     IconButton(
-                      onPressed: _incluirTipoTelefone,
+                      onPressed: _abrirDialogNovoTipoTelefone,
                       icon: const Icon(Icons.add),
                     ),
                   ],

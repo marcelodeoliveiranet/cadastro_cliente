@@ -1,4 +1,5 @@
 import 'package:cadastro_cliente/core/database/tables/ramo_atividade.dart';
+import 'package:cadastro_cliente/core/database/tables/tipo_telefone.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -33,6 +34,7 @@ class AppDatabase {
 
   static Future<void> _onCreate(Database db, int version) async {
     await db.execute(ramoAtividadeTable);
+    await db.execute(tipoTelefoneTable);
   }
 
   static Future<void> _update(
