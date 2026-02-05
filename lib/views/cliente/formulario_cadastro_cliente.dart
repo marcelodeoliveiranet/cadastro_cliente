@@ -197,6 +197,14 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       if (value == null || value.trim().isEmpty) {
                         return "Informe a descrição";
                       }
+
+                      if (clienteController.ramosAtividade.any(
+                        (e) =>
+                            e.descricao.toLowerCase() ==
+                            descricaoController.text.toLowerCase().trim(),
+                      )) {
+                        return "Esta ramo já foi cadastrado";
+                      }
                       return null;
                     },
                   ),
@@ -223,28 +231,6 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                                 formModalKey.currentState?.validate() ?? false;
 
                             if (!isVaid) {
-                              return;
-                            }
-
-                            if (clienteController.ramosAtividade.any(
-                              (e) =>
-                                  e.descricao.toLowerCase() ==
-                                  descricaoController.text.toLowerCase().trim(),
-                            )) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Ramo de atividade já incluído",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
                               return;
                             }
 
@@ -326,6 +312,14 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                       if (value == null || value.trim().isEmpty) {
                         return "Informe a descrição";
                       }
+
+                      if (clienteController.tiposTelefone.any(
+                        (e) =>
+                            e.descricao.toLowerCase() ==
+                            descricaoController.text.toLowerCase().trim(),
+                      )) {
+                        return "Tipo de telefone já cadastrado";
+                      }
                       return null;
                     },
                   ),
@@ -352,28 +346,6 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                                 formModalKey.currentState?.validate() ?? false;
 
                             if (!isVaid) {
-                              return;
-                            }
-
-                            if (clienteController.tiposTelefone.any(
-                              (e) =>
-                                  e.descricao.toLowerCase() ==
-                                  descricaoController.text.toLowerCase().trim(),
-                            )) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Tipo de telefone já incluído",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
                               return;
                             }
 
