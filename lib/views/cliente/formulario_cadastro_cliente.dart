@@ -1,4 +1,3 @@
-import 'package:cadastro_cliente/components/custom_form_field.dart';
 import 'package:cadastro_cliente/controllers/cliente_controller.dart';
 import 'package:cadastro_cliente/dependecies/injetor.dart';
 import 'package:cadastro_cliente/dto/request/cadastrar_ramo_atividade_request.dart';
@@ -23,6 +22,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   ClienteController clienteController = getIt<ClienteController>();
   String? _tipoPessoa = "F";
   RamoAtividadeModel? _ramoAtividadeSelecionado;
+  TipoTelefoneModel? _tipoTelefoneSelecionado;
 
   final _razaoSocialFocus = FocusNode();
   final _numeroLogradouroFocus = FocusNode();
@@ -132,6 +132,9 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   }
 
   void _salvar(BuildContext context) async {
+    formKey.currentState!.reset();
+    _limparCamposFormulario();
+
     if (formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -145,11 +148,12 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
         ),
       );
 
-      setState(() {
-        _limparCamposFormulario();
-      });
+      _ramoAtividadeSelecionado = null;
+      _tipoTelefoneSelecionado = null;
+      _tipoPessoa = "F";
 
-      formKey.currentState?.reset();
+      setState(() {});
+
       FocusScope.of(context).requestFocus(_razaoSocialFocus);
     }
   }
@@ -219,6 +223,28 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                                 formModalKey.currentState?.validate() ?? false;
 
                             if (!isVaid) {
+                              return;
+                            }
+
+                            if (clienteController.ramosAtividade.any(
+                              (e) =>
+                                  e.descricao.toLowerCase() ==
+                                  descricaoController.text.toLowerCase().trim(),
+                            )) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Ramo de atividade já incluído",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
                               return;
                             }
 
@@ -328,6 +354,29 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                             if (!isVaid) {
                               return;
                             }
+
+                            if (clienteController.tiposTelefone.any(
+                              (e) =>
+                                  e.descricao.toLowerCase() ==
+                                  descricaoController.text.toLowerCase().trim(),
+                            )) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Tipo de telefone já incluído",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                              return;
+                            }
+
                             CadastrarTipoTelefoneRequest
                             cadastrarTipoTelefoneRequest =
                                 CadastrarTipoTelefoneRequest(
@@ -807,6 +856,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                               ),
                             ),
                             isExpanded: true,
+                            value: _tipoTelefoneSelecionado,
                             items:
                                 clienteController.tiposTelefone.map((
                                   tipoTelefone,
