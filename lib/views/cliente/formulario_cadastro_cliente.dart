@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cadastro_cliente/controllers/cliente_controller.dart';
 import 'package:cadastro_cliente/dependecies/injetor.dart';
 import 'package:cadastro_cliente/dto/request/cadastrar_ramo_atividade_request.dart';
 import 'package:cadastro_cliente/dto/request/cadastrar_tipo_telefone_request.dart';
 import 'package:cadastro_cliente/models/ramo_atividade_model.dart';
 import 'package:cadastro_cliente/models/tipo_telefone_model.dart';
+import 'package:cadastro_cliente/states/base_state.dart';
 import 'package:cadastro_cliente/utils/validator/cnpj_validator.dart';
 import 'package:cadastro_cliente/utils/validator/cpf_validator.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +29,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
 
   final _razaoSocialFocus = FocusNode();
   final _numeroLogradouroFocus = FocusNode();
+  final _cepFocus = FocusNode();
 
   final cepMask = MaskTextInputFormatter(
     mask: "#####-###",
@@ -76,29 +80,21 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
   final telefone2Controller = TextEditingController();
   final complementoTelefone2Controller = TextEditingController();
 
+  Future<bool> temConexaoInternet() async {
+    try {
+      final result = await InternetAddress.lookup("google.com");
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
   void _buscarCep(BuildContext context) async {
-    final cep = cepController.text;
-    final cepData = await clienteController.buscarCep(cep);
-
-    if (cepData != null) {
-      logradouroCotroller.text = cepData.logradouro;
-      bairroController.text = cepData.bairro;
-      municipioController.text = cepData.localidade;
-      estadoController.text = cepData.uf;
-      codigoIbgeController.text = cepData.ibge;
-
-      FocusScope.of(context).requestFocus(_numeroLogradouroFocus);
-    } else {
-      logradouroCotroller.clear();
-      bairroController.clear();
-      municipioController.clear();
-      estadoController.clear();
-      codigoIbgeController.clear();
-
+    if (cepController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "CEP não encontrado",
+            "Informe o CEP",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
           backgroundColor: Colors.red,
@@ -106,6 +102,97 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
           duration: Duration(seconds: 2),
         ),
       );
+
+      FocusScope.of(context).requestFocus(_cepFocus);
+      return;
+    }
+
+    final haConexaoInternet = await temConexaoInternet();
+
+    if (!haConexaoInternet) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Não há conexão com a internet",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    final value = clienteController.buscarDadosCep.value;
+    final cepData = await clienteController.buscarCep(
+      cepController.text.trim(),
+    );
+
+    if (value is ErrorState) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: IntrinsicHeight(
+              child: Column(
+                spacing: 18,
+                children: [
+                  Icon(Icons.error, color: Colors.red, size: 45),
+                  Text(value.erro, style: TextStyle(fontSize: 24)),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } else if (value is LoadingState) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: IntrinsicHeight(
+              child: Column(
+                spacing: 16,
+                children: [CircularProgressIndicator()],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      if (value is SuccessState) {
+        if (cepData != null) {
+          logradouroCotroller.text = cepData.logradouro;
+          bairroController.text = cepData.bairro;
+          municipioController.text = cepData.localidade;
+          estadoController.text = cepData.uf;
+          codigoIbgeController.text = cepData.ibge;
+
+          FocusScope.of(context).requestFocus(_numeroLogradouroFocus);
+        } else {
+          logradouroCotroller.clear();
+          bairroController.clear();
+          municipioController.clear();
+          estadoController.clear();
+          codigoIbgeController.clear();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "CEP não encontrado",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -647,6 +734,7 @@ class _FormularioClienteWidgetState extends State<FormularioClienteWidget> {
                     Expanded(
                       child: TextFormField(
                         controller: cepController,
+                        focusNode: _cepFocus,
                         inputFormatters: [cepMask],
                         keyboardType: TextInputType.number,
                         autovalidateMode: AutovalidateMode.onUserInteraction,

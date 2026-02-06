@@ -19,12 +19,20 @@ class ClienteController extends ChangeNotifier {
 
   ValueNotifier<BaseState> ramoAtividadeState = ValueNotifier(IdleState());
   ValueNotifier<BaseState> tipoTelefoneState = ValueNotifier(IdleState());
+  ValueNotifier<BaseState> buscarDadosCep = ValueNotifier(IdleState());
 
   Future<CepResponse?> buscarCep(String cep) async {
+    buscarDadosCep.value = LoadingState();
+
     try {
       final cepData = await cepServices.obterDadosCep(cep);
+      buscarDadosCep.value = SuccessState(
+        sucesso: "Obter dados do CEP com sucesso",
+      );
+
       return cepData;
     } catch (e) {
+      buscarDadosCep.value = ErrorState(erro: e.toString());
       print('Erro ao buscar CEP: $e');
       return null;
     } finally {
